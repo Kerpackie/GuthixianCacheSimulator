@@ -1,4 +1,4 @@
-﻿name: Build and Deploy
+name: Build and Deploy
 on:
   push:
     branches:
@@ -14,13 +14,19 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '9.0.x'
+          dotnet-version: '9.0.x'  
+
+      - name: Restore dependencies
+        run: dotnet restore
 
       - name: Build
         run: dotnet build --configuration Release
 
       - name: Publish
         run: dotnet publish --configuration Release --output ./output
+
+      - name: Copy index.html to 404.html for GitHub Pages SPA routing
+        run: cp ./output/wwwroot/index.html ./output/wwwroot/404.html
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
